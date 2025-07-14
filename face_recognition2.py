@@ -202,8 +202,14 @@ while True:
     database = "school_registration.db"
     conn = create_connection(database)
     cursor = conn.cursor()
+    person_name = person_name.strip()
+
     cursor.execute("SELECT person_id FROM students WHERE name = ?", (person_name,))
-    student_name_id = cursor.fetchone()[0]
+    result = cursor.fetchone()
+    if result is None:
+        print(f"[!] No student found with name '{person_name}'")
+        continue  # Skip this frame
+    student_name_id = result[0]
     print(student_name_id)
     combined_person_id = cursor.execute("SELECT combined_id FROM combined WHERE person_id = ?", (student_name_id,))
     combined_person_id = combined_person_id.fetchone()[0]
